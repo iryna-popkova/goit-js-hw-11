@@ -4,17 +4,19 @@ const Key = '39735562-579f9e47f6a2ff3df54c66458';
 
 axios.defaults.baseUrl = 'https://pixabay.com/api/';
 
-async function fetchImg(userInput) {
+
+async function fetchImg(queryString, page, perPage) {
   try {
-    const response = await axios.get('',
+    const response = await axios.get('https://pixabay.com/api/',
       {
         params: {
           key: Key,
-          q: userInput,
-          image_type: photo,
-          orientation: horizontal,
+          q: queryString,
+          image_type: 'photo',
+          orientation: 'horizontal',
           safesearch: true,
-          per_page: 40,
+          per_page: perPage,
+          page: page
 
         }
       }
@@ -25,6 +27,7 @@ async function fetchImg(userInput) {
 
   }
 }
+
 
 export { fetchImg };
 
