@@ -7,7 +7,7 @@ const searchForm = document.querySelector('.search-form');
 const galley = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 const searchQuery = document.querySelector('.searchQuery');
-const perPage = 10
+const perPage = 40;
 
 let page;
 let totalHits;
@@ -76,6 +76,8 @@ if (!searchValueIsCorrect()) {
       .join('')
 
       galley.insertAdjacentHTML('beforeend', htmlForRender);
+
+      galley.refresh();
 
       if (hasNextPage()) {
         loadMoreBtn.classList.remove('is-hidden');
