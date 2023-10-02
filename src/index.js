@@ -4,10 +4,12 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const searchForm = document.querySelector('.search-form');
-const galley = document.querySelector('.gallery');
+const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 const searchQuery = document.querySelector('.searchQuery');
 const perPage = 40;
+
+let galleryLightbox = new SimpleLightbox('.gallery a');
 
 let page;
 let totalHits;
@@ -18,8 +20,11 @@ loadMoreBtn.classList.add('is-hidden');
 function requestAndDisplay() {
   loadMoreBtn.classList.add('is-hidden');
 
-if (!searchValueIsCorrect()) {
+  if (!searchValueIsCorrect()) {
     Notify.failure("Search request is required")
+    resetPaginator()
+    gallery.innerHTML = '';
+    return
   }
 
   if (!hasNextPage()) {
@@ -27,7 +32,7 @@ if (!searchValueIsCorrect()) {
     return;
   }
 
-  galley.innerHTML = '';
+  gallery.innerHTML = '';
 
   fetchImg(searchValueIsCorrect(), page, perPage)
     .then(response => {
@@ -75,13 +80,15 @@ if (!searchValueIsCorrect()) {
   })
       .join('')
 
-      galley.insertAdjacentHTML('beforeend', htmlForRender);
+      gallery.insertAdjacentHTML('beforeend', htmlForRender);
 
-      galley.refresh();
+
 
       if (hasNextPage()) {
         loadMoreBtn.classList.remove('is-hidden');
       }
+
+      galleryLightbox.refresh();
 
       const { height: cardHeight } = document
   .querySelector(".gallery")
