@@ -83,7 +83,6 @@ function requestAndDisplay() {
       gallery.insertAdjacentHTML('beforeend', htmlForRender);
 
 
-
       if (hasNextPage()) {
         loadMoreBtn.classList.remove('is-hidden');
       }
@@ -95,7 +94,7 @@ function requestAndDisplay() {
   .firstElementChild.getBoundingClientRect();
 
 window.scrollBy({
-  top: cardHeight * 2,
+  top: cardHeight,
   behavior: "smooth",
 });
 
