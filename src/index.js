@@ -23,7 +23,6 @@ function requestAndDisplay() {
   if (!searchValueIsCorrect()) {
     Notify.failure("Search request is required")
     resetPaginator()
-    gallery.innerHTML = '';
     return
   }
 
@@ -32,17 +31,19 @@ function requestAndDisplay() {
     return;
   }
 
-  gallery.innerHTML = '';
-
   fetchImg(searchValueIsCorrect(), page, perPage)
     .then(response => {
-      const totalHitsInt = parseInt(response.totalHits)
+      const isSearchRequest = totalHits === -1
 
-      if (totalHits == -1) {
-        Notify.info(`Hooray! We found ${totalHitsInt} images.`)
+      totalHits = parseInt(response.totalHits)
+
+      if (isSearchRequest) {
+        Notify.info(`Hooray! We found ${totalHits} images.`)
       }
 
-      totalHits = totalHitsInt
+      if (hasNextPage()) {
+        loadMoreBtn.classList.remove('is-hidden');
+      }
 
       const htmlForRender = response.hits.map(({
             webformatURL,
@@ -82,11 +83,6 @@ function requestAndDisplay() {
 
       gallery.insertAdjacentHTML('beforeend', htmlForRender);
 
-
-      if (hasNextPage()) {
-        loadMoreBtn.classList.remove('is-hidden');
-      }
-
       galleryLightbox.refresh();
 
       const { height: cardHeight } = document
@@ -119,14 +115,17 @@ function searchValueIsCorrect() {
 }
 
 function hasNextPage() {
-  const result = totalHits + perPage >= perPage * page
+  const result = totalHits >= perPage * page
+
   return result || totalHits == -1;
 }
 
 function onFormSubmit(event) {
   event.preventDefault();
+  gallery.innerHTML = '';
   resetPaginator()
   requestAndDisplay()
+
 }
 
 
